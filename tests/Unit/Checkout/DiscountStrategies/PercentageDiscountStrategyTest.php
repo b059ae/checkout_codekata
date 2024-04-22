@@ -3,17 +3,31 @@
 namespace Unit\Checkout\DiscountStrategies;
 
 use App\Checkout\DiscountStrategies\PercentageDiscountStrategy;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class PercentageDiscountStrategyTest extends TestCase
 {
-    public function testCalculateDiscount(): void
+    #[DataProvider('discountProvider')]
+    public function testCalculateDiscount(float $percentage, int $unitQty, float $unitPrice, float $total): void
     {
-        $strategy = new PercentageDiscountStrategy(50);
+        $strategy = new PercentageDiscountStrategy($percentage);
 
-        $this->assertEquals(25, $strategy->calculateDiscount(1, 50));
-        $this->assertEquals(50, $strategy->calculateDiscount(2, 50));
-        $this->assertEquals(75, $strategy->calculateDiscount(3, 50));
-        $this->assertEquals(100, $strategy->calculateDiscount(4, 50));
+        $actual = $strategy->calculateDiscount($unitQty, $unitPrice);
+
+        $this->assertEquals($total, $actual);
+    }
+
+    /**
+     * @return array{array{0: float, 1: int, 2: float, 3: float}}
+     */
+    public static function discountProvider(): array
+    {
+        return [
+            [50, 1, 50, 25],
+            [50, 2, 50, 50],
+            [50, 3, 50, 75],
+            [50, 4, 50, 100],
+        ];
     }
 }

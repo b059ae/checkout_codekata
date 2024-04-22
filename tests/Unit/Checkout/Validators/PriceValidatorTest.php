@@ -3,6 +3,7 @@
 namespace Unit\Checkout\Validators;
 
 use App\Checkout\Validators\PriceValidator;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class PriceValidatorTest extends TestCase
@@ -14,19 +15,22 @@ class PriceValidatorTest extends TestCase
         $this->assertTrue($validator->validate(50));
     }
 
-    public function testValidateThrowsInvalidArgumentExceptionOnNegativeValue(): void
+    #[DataProvider('invalidPriceProvider')]
+    public function testValidateThrowsInvalidArgumentException(float $price): void
     {
         $this->expectException(\InvalidArgumentException::class);
 
-        $validator = new PriceValidator();
-        $validator->validate(-50);
+        (new PriceValidator())->validate($price);
     }
 
-    public function testValidateThrowsInvalidArgumentExceptionOnZeroValue(): void
+    /**
+     * @return array{array{0: float}}
+     */
+    public static function invalidPriceProvider(): array
     {
-        $this->expectException(\InvalidArgumentException::class);
-
-        $validator = new PriceValidator();
-        $validator->validate(0);
+        return [
+            [0],
+            [-50],
+        ];
     }
 }
