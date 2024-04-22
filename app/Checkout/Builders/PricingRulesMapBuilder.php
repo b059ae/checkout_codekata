@@ -13,6 +13,9 @@ readonly class PricingRulesMapBuilder
     {
     }
 
+    /**
+     * @return array<string, PricingRule>
+     */
     public function build(): array
     {
         $map = [];

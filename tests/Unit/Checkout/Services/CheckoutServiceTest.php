@@ -42,6 +42,9 @@ class CheckoutServiceTest extends TestCase
         $this->assertEquals($total, $service->total());
     }
 
+    /**
+     * @return array{array{0: string, 1: int}}
+     */
     public static function totalProvider(): array
     {
         return [
@@ -74,6 +77,9 @@ class CheckoutServiceTest extends TestCase
         ];
     }
 
+    /**
+     * @param PricingRule[] $rules
+     */
     #[DataProvider('invalidArgumentExceptionProvider')]
     public function testInvalidArgumentException(array $rules, string $item): void
     {
@@ -83,6 +89,9 @@ class CheckoutServiceTest extends TestCase
         $service->scan($item)->total();
     }
 
+    /**
+     * @return array{array{0: PricingRule[], 1: string}}
+     */
     public static function invalidArgumentExceptionProvider(): array
     {
         return [

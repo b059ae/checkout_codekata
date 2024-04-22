@@ -9,7 +9,13 @@ use App\Checkout\Validators\PriceValidator;
 
 class CheckoutService
 {
+    /**
+     * @var array<string, int>
+     */
     private array $cart = [];
+    /**
+     * @var array<string, PricingRule>
+     */
     private array $pricingRulesMap;
 
     /**
@@ -20,7 +26,7 @@ class CheckoutService
         $this->pricingRulesMap = (new PricingRulesMapBuilder($pricingRules))->build();
     }
 
-    public function scan($item): self
+    public function scan(string $item): self
     {
         if (!isset($this->cart[$item])) {
             $this->cart[$item] = 0;
@@ -47,7 +53,7 @@ class CheckoutService
             throw new \InvalidArgumentException("Item $item is not available in the pricing rules");
         }
         $unitPrice = $this->pricingRulesMap[$item]->price;
-        (new PriceValidator())->validate($unitPrice, $quantity);
+        (new PriceValidator())->validate($unitPrice);
         $defaultPrice = $unitPrice * $quantity;
 
         if ($discounts = $this->getItemDiscounts($item)) {
@@ -57,9 +63,12 @@ class CheckoutService
         return $defaultPrice;
     }
 
+    /**
+     * @return DiscountStrategy[]
+     */
     private function getItemDiscounts(string $item): array
     {
-        return $this->pricingRulesMap[$item]->discounts ?? [];
+        return   $this->pricingRulesMap[$item]->discounts ?? [];
     }
 
     /**
