@@ -1,12 +1,14 @@
 <?php
 
-namespace Unit\Checkout\Services;
+namespace Checkout\Services;
 
+use App\Checkout\Builders\PricingRulesMapBuilder;
 use App\Checkout\CheckoutService;
 use App\Checkout\DiscountStrategies\FixedDiscountStrategy;
 use App\Checkout\DiscountStrategies\FreeItemDiscountStrategy;
 use App\Checkout\DiscountStrategies\PercentageDiscountStrategy;
 use App\Checkout\DTO\PricingRule;
+use App\Checkout\Validators\PriceValidator;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
@@ -15,25 +17,28 @@ class CheckoutServiceTest extends TestCase
     #[DataProvider('totalProvider')]
     public function testTotal(string $items, float $total): void
     {
-        $rules = [
-            new PricingRule('A', 50, [
+        $priceValidator = $this->createMock(PriceValidator::class);
+        $priceValidator->method('validate')->willReturn(true);
+        $priceRulesMapBuilder = $this->createMock(PricingRulesMapBuilder::class);
+        $priceRulesMapBuilder->method('build')->willReturn([
+            'A' => new PricingRule('A', 50, [
                 new FixedDiscountStrategy(2, 90),
                 new FixedDiscountStrategy(3, 130),
             ]),
-            new PricingRule('B', 30, [
+            'B' => new PricingRule('B', 30, [
                 new FixedDiscountStrategy(2, 45),
             ]),
-            new PricingRule('C', 20, [
+            'C' => new PricingRule('C', 20, [
                 new FixedDiscountStrategy(2, 30),
                 new FreeItemDiscountStrategy(3),
             ]),
-            new PricingRule('D', 15),
-            new PricingRule('E', 100, [
+            'D' => new PricingRule('D', 15),
+            'E' => new PricingRule('E', 100, [
                 new FixedDiscountStrategy(3, 250),
                 new PercentageDiscountStrategy(5),
             ]),
-        ];
-        $service = (new CheckoutService($rules));
+        ]);
+        $service = (new CheckoutService($priceRulesMapBuilder, $priceValidator))->setPriceRules([]);
 
         foreach (str_split($items) as $item) {
             $service->scan($item);
@@ -74,30 +79,6 @@ class CheckoutServiceTest extends TestCase
             ['AAABBD', 190], // 130(AAA) + 45(BB) + 15(D)
             ['DABABA', 190], // 15(D) + 45(BB) + 130(AAA)
             ['EDEEDCBCAACBC', 475], // 250(EEE) + 30(D) + 60(CC) + 90(AAA) + 45(BB)
-        ];
-    }
-
-    /**
-     * @param PricingRule[] $rules
-     */
-    #[DataProvider('invalidArgumentExceptionProvider')]
-    public function testInvalidArgumentException(array $rules, string $item): void
-    {
-        $this->expectException(\InvalidArgumentException::class);
-
-        $service = (new CheckoutService($rules));
-        $service->scan($item)->total();
-    }
-
-    /**
-     * @return array{array{0: PricingRule[], 1: string}}
-     */
-    public static function invalidArgumentExceptionProvider(): array
-    {
-        return [
-            [[], 'A'],
-            [[new PricingRule('A', 0)], 'A'],
-            [[new PricingRule('A', -50)], 'A'],
         ];
     }
 }

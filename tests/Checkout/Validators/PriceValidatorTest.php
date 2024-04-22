@@ -1,6 +1,6 @@
 <?php
 
-namespace Unit\Checkout\Validators;
+namespace Checkout\Validators;
 
 use App\Checkout\Validators\PriceValidator;
 use PHPUnit\Framework\Attributes\DataProvider;

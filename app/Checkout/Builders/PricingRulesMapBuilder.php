@@ -4,22 +4,17 @@ namespace App\Checkout\Builders;
 
 use App\Checkout\DTO\PricingRule;
 
-readonly class PricingRulesMapBuilder
+class PricingRulesMapBuilder
 {
     /**
      * @param PricingRule[] $pricingRules
-     */
-    public function __construct(private array $pricingRules)
-    {
-    }
-
-    /**
+     *
      * @return array<string, PricingRule>
      */
-    public function build(): array
+    public function build(array $pricingRules): array
     {
         $map = [];
-        foreach ($this->pricingRules as $rule) {
+        foreach ($pricingRules as $rule) {
             $map[$rule->item] = $rule;
         }
 

@@ -36,8 +36,21 @@ composer install
 ```
 
 ## Testing
+
 Run tests with PHPUnit.
+
 ```
 ./vendor/bin/phpunit tests
 ```
 
+## CLI Usage
+
+To demonstrate the checkout system, a CLI command has been provided. This command requires a JSON file containing pricing rules and a string of items to be checked out as inputs.
+For testing purposes, a sample JSON file named pricing_rules.json is included in the ./storage directory, along with a sample string of items: BBACAAE.
+To run the CLI command, execute the following in your terminal:
+
+```
+php cli.php app:checkout ./storage/pricing_rules.json BBACAAE
+```
+
+Executing this command will process the items based on the provided pricing rules and display the total price.

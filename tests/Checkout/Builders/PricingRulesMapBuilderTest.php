@@ -1,6 +1,6 @@
 <?php
 
-namespace Unit\Checkout\Builders;
+namespace Checkout\Builders;
 
 use App\Checkout\Builders\PricingRulesMapBuilder;
 use App\Checkout\DTO\PricingRule;
@@ -16,9 +16,9 @@ class PricingRulesMapBuilderTest extends TestCase
             new PricingRule('C', 20),
             new PricingRule('D', 15),
         ];
-        $builder = new PricingRulesMapBuilder($pricingRules);
+        $builder = new PricingRulesMapBuilder();
 
-        $map = $builder->build();
+        $map = $builder->build($pricingRules);
 
         $this->assertCount(4, $map);
         $this->assertArrayHasKey('A', $map);

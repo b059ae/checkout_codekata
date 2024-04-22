@@ -16,14 +16,22 @@ class CheckoutService
     /**
      * @var array<string, PricingRule>
      */
-    private array $pricingRulesMap;
+    private array $pricingRulesMap = [];
+
+    public function __construct(
+        private readonly PricingRulesMapBuilder $pricingRulesMapBuilder,
+        private readonly PriceValidator $priceValidator,
+    ) {
+    }
 
     /**
      * @param PricingRule[] $pricingRules
      */
-    public function __construct(array $pricingRules)
+    public function setPriceRules(array $pricingRules): self
     {
-        $this->pricingRulesMap = (new PricingRulesMapBuilder($pricingRules))->build();
+        $this->pricingRulesMap = $this->pricingRulesMapBuilder->build($pricingRules);
+
+        return $this;
     }
 
     public function scan(string $item): self
@@ -53,7 +61,7 @@ class CheckoutService
             throw new \InvalidArgumentException("Item $item is not available in the pricing rules");
         }
         $unitPrice = $this->pricingRulesMap[$item]->price;
-        (new PriceValidator())->validate($unitPrice);
+        $this->priceValidator->validate($unitPrice);
         $defaultPrice = $unitPrice * $quantity;
 
         if ($discounts = $this->getItemDiscounts($item)) {

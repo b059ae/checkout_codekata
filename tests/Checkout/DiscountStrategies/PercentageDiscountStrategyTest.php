@@ -1,6 +1,6 @@
 <?php
 
-namespace Unit\Checkout\DiscountStrategies;
+namespace Checkout\DiscountStrategies;
 
 use App\Checkout\DiscountStrategies\PercentageDiscountStrategy;
 use PHPUnit\Framework\Attributes\DataProvider;
