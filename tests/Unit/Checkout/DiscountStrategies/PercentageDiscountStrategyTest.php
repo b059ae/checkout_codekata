@@ -7,7 +7,6 @@ use PHPUnit\Framework\TestCase;
 
 class PercentageDiscountStrategyTest extends TestCase
 {
-
     public function testCalculateDiscount(): void
     {
         $strategy = new PercentageDiscountStrategy(50);

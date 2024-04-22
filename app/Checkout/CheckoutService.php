@@ -31,7 +31,7 @@ class CheckoutService
         if (!isset($this->cart[$item])) {
             $this->cart[$item] = 0;
         }
-        $this->cart[$item]++;
+        ++$this->cart[$item];
 
         return $this;
     }
@@ -68,7 +68,7 @@ class CheckoutService
      */
     private function getItemDiscounts(string $item): array
     {
-        return   $this->pricingRulesMap[$item]->discounts ?? [];
+        return $this->pricingRulesMap[$item]->discounts ?? [];
     }
 
     /**

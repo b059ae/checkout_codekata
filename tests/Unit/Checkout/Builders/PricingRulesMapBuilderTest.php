@@ -8,14 +8,13 @@ use PHPUnit\Framework\TestCase;
 
 class PricingRulesMapBuilderTest extends TestCase
 {
-
     public function testBuild(): void
     {
         $pricingRules = [
             new PricingRule('A', 50),
             new PricingRule('B', 30),
             new PricingRule('C', 20),
-            new PricingRule('D', 15)
+            new PricingRule('D', 15),
         ];
         $builder = new PricingRulesMapBuilder($pricingRules);
 

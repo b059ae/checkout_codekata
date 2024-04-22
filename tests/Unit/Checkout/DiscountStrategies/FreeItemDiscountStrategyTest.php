@@ -7,7 +7,6 @@ use PHPUnit\Framework\TestCase;
 
 class FreeItemDiscountStrategyTest extends TestCase
 {
-
     public function testCalculateDiscount(): void
     {
         $strategy = new FreeItemDiscountStrategy(3);

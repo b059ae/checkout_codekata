@@ -8,8 +8,9 @@ readonly class FreeItemDiscountStrategy implements DiscountStrategy
     {
     }
 
-    public function calculateDiscount(int $quantity, float $unitPrice): float {
-        $freeQty = (int)($quantity / $this->qty);
+    public function calculateDiscount(int $quantity, float $unitPrice): float
+    {
+        $freeQty = (int) ($quantity / $this->qty);
 
         return ($quantity - $freeQty) * $unitPrice;
     }
